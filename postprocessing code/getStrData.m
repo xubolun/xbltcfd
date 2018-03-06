@@ -35,21 +35,38 @@ for i = 1:id1
   
     end
     
-    U(i).val = eval([Vname(i).name1]);
+    %     U(i).val = eval([Vname(i).name1]);
+%     
+%     V(i).val = eval([Vname(i).name2]);
+%     
+%     if lid == 3  % if 2D
+%         
+%         T(i).val = eval([Vname(i).name3]);
+%         
+%     elseif lid == 4 %if 3D
+%         
+%         W(i).val = eval([Vname(i).name3]);
+%         
+%         T(i).val = eval([Vname(i).name4]);
+%         
+%     end
+
+    U(:,:,:,i) = eval([Vname(i).name1]);
     
-    V(i).val = eval([Vname(i).name2]);
+    V(:,:,:,i) = eval([Vname(i).name2]);
     
     if lid == 3  % if 2D
         
-        T(i).val = eval([Vname(i).name3]);
+        T(:,:,:,i) = eval([Vname(i).name3]);
         
     elseif lid == 4 %if 3D
         
-        W(i).val = eval([Vname(i).name3]);
+        W(:,:,:,i) = eval([Vname(i).name3]);
         
-        T(i).val = eval([Vname(i).name4]);
+        T(:,:,:,i) = eval([Vname(i).name4]);
         
     end
+    
     
 end
 
