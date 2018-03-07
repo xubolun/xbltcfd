@@ -13,6 +13,8 @@ for n = 1:meshz
             fprintf(h1,'%f %f %f\n ', Xm(l,m,n),Ym(l,m,n),Zm(l,m,n) );
             fprintf(h1,'%f %f %f\n', a(l,m,n),b(l,m,n),c(l,m,n) );
             fprintf(h1,'%f\n',d(l,m,n) );
+
+
         end
     end
 end

@@ -1,11 +1,14 @@
-function[ddar,ddaphi,ddaz]=deri2(a,r,r1,r2,meshr,meshphi,meshz)
-%calculate the 2nd order spacial derivative in cynlindrical coordinate
-meshr1 = meshr -1;
-meshz1 = meshz -1;
+function[ddar,ddap,ddaz]=deri2(a,r1,r2,meshr,meshphi,meshz,id0,id1)
+%calculate the 2nd order spacial derivative in cynlindrical coordinate in
+%parallel
 
-[dar,daphi,daz] = deri(a,r,r1,r2,meshr,meshphi,meshz);
-[ddar,ddarphi,ddarz] = deri(dar,r,r1,r2,meshr,meshphi,meshz);
-[ddaphir,ddaphi,ddaphiz] = deri(daphi,r,r1,r2,meshr,meshphi,meshz);
-[ddazr,ddazphi,ddaz] = deri(daz,r,r1,r2,meshr,meshphi,meshz);
+meshr1 = meshr - 1;
+meshz1 = meshz - 1;
+
+[dar,daphi,daz] = deri(a,r1,r2,meshr,meshphi,meshz,id0,id1); % 1st order derivative
+
+[ddar,ddarp,ddarz] = deri(dar,r1,r2,meshr,meshphi,meshz,id0,id1);
+[ddapr,ddap,ddapz] = deri(daphi,r1,r2,meshr,meshphi,meshz,id0,id1);
+[ddazr,ddazp,ddaz] = deri(daz,r1,r2,meshr,meshphi,meshz,id0,id1);
 
 end

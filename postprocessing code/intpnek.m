@@ -1,4 +1,4 @@
-function[U,V,W,T,Xm,Ym,Zm] = intpnek(datax,datay,dataz,datau,datav,dataw,datat,r1,r2,meshr,meshphi,meshz)
+function[U,V,W,T,Xm,Ym,Zm,r] = intpnek(datax,datay,dataz,datau,datav,dataw,datat,r1,r2,meshr,meshphi,meshz)
 U=[];
 V=[];
 W=[];
