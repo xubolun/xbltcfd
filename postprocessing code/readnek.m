@@ -1,4 +1,4 @@
-function [time,istep,nel,N,data,datax,datay,dataz,datau,datav,dataw,datat] = readnek(fname)
+function [time,istep,nel,N,outnameu,outnamev,outnamew,outnamet] = readnek(fname,otname)
 %
 % This function reads binary data from the nek5000 file format
 %
@@ -31,30 +31,14 @@ function [time,istep,nel,N,data,datax,datay,dataz,datau,datav,dataw,datat] = rea
 %--------------------------------------------------------------------------
 %  INITIALIZE OUTPUT
 %--------------------------------------------------------------------------
-data   = [];
-etag   = [];
-lr1    = [];
-elmap  = [];
 time   = [];
 nel = [];
 N = [];
 istep  = [];
-fields = [];
-wdsz   = [];
-header = [];
-metax = [];
-datax = [];
-datay = [];
-dataz = [];
-datau = [];
-datav = [];
-dataw = [];
-datat = [];
 %--------------------------------------------------------------------------
 %  OPEN THE FILE
 %--------------------------------------------------------------------------
 emode = 'le';
-% fname = 'field/cylann0.f00011';
 [infile,message] = fopen(fname,'r',['ieee-' emode]);
 if infile == -1, disp(message), status = -1; return, end
 %
@@ -163,6 +147,13 @@ end
 % Dump field data
 %--------------------------------------------------------------------------
 [nel,N3,nfld] = size(data); N = power(N3,1/3);
+  datax = zeros(nel,N3);
+  datay = zeros(nel,N3);
+  dataz = zeros(nel,N3);
+  datau = zeros(nel,N3);
+  datav = zeros(nel,N3);
+  dataw = zeros(nel,N3);
+  datat = zeros(nel,N3);
 if nfld == 8 
   datax = data(:,:,1);
   datay = data(:,:,2);
@@ -173,13 +164,38 @@ if nfld == 8
   datat = data(:,:,8);
 end
 if nfld == 5
+  datax = [];
+  datay = [];
+  dataz = [];
   datau = data(:,:,1);
   datav = data(:,:,2);
   dataw = data(:,:,3);
   datat = data(:,:,5);
 end
+% save flow field immediately then release the UVWT matrices 
 
+outnameu = sprintf('%s%s%s%s','results/','u_',otname,'.mat');
+outnamev = sprintf('%s%s%s%s','results/','v_',otname,'.mat');
+outnamew = sprintf('%s%s%s%s','results/','w_',otname,'.mat');
+outnamet = sprintf('%s%s%s%s','results/','t_',otname,'.mat');
 
+save(outnameu,'datau');
+save(outnamev,'datav');
+save(outnamew,'dataw');
+save(outnamet,'datat');
+
+%dump the field data into .mat files for subsequent processing, especially
+%the coordinate xyz
+if ~isempty(datax)
+outnamex = sprintf('%s%s%s%s','results/','x_',otname,'.mat');
+outnamey = sprintf('%s%s%s%s','results/','y_',otname,'.mat');
+outnamez = sprintf('%s%s%s%s','results/','z_',otname,'.mat');
+
+save(outnamex,'datax');
+save(outnamey,'datay');
+save(outnamez,'dataz');
+end
+clear data*;
 %--------------------------------------------------------------------------
 % READ "METADATA": max and min of every field in every element
 %--------------------------------------------------------------------------
@@ -206,7 +222,6 @@ if ndim == 3
 		metat = [];
 	end
 end
-
 
 %--------------------------------------------------------------------------
 % CLOSE FILE

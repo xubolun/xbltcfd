@@ -1,8 +1,8 @@
 function[U,V,W,T,Xm,Ym,Zm,r] = intpnek(datax,datay,dataz,datau,datav,dataw,datat,r1,r2,meshr,meshphi,meshz)
-U=[];
-V=[];
-W=[];
-T=[];
+U = zeros(meshr,meshphi,meshz);
+V = zeros(meshr,meshphi,meshz);
+W = zeros(meshr,meshphi,meshz);
+T = zeros(meshr,meshphi,meshz);
 
 %---------------------------------------------------
 %create an annular cylinder domain for interpolation
@@ -31,9 +31,13 @@ end
     W = griddata(datax,datay,dataz,dataw,Xm,Ym,Zm);
     T = griddata(datax,datay,dataz,datat,Xm,Ym,Zm);
     U(meshr,:,:)=U(meshr-1,:,:);
+    U(:,meshphi,:)=U(:,1,:);
     V(meshr,:,:)=V(meshr-1,:,:);
-    W(meshr,:,:)=W(meshr-1,:,:);
+    V(:,meshphi,:)=V(:,1,:);
+    W(meshr,:,:) = W(meshr-1,:,:);
+    W(:,meshphi,:) = W(:,1,:);
     T(meshr,:,:)=T(meshr-1,:,:);
+    T(:,meshphi,:) = T(:,1,:);
 
 %----------------------------------------------------
 end

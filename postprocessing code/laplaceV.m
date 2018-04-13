@@ -11,18 +11,31 @@ LaW = laplaceS(W,r,r1,r2,meshr,meshphi,meshz,id0,id1);
 
 [dvr,dvp,dvz]=deri(V,r1,r2,meshr,meshphi,meshz,id0,id1);
 
+if id0~=id1
 parfor l = id0:id1
     
     for i = 1:meshr
         
-        Lar(i,:,:,l) = LaU(i,:,:,l) - U(i,:,:,l)/r(i)^2 -2/r(i)^2*dvp(i,:,:,l);
+        Lar(i,:,:,l) = LaU(i,:,:,l) - U(i,:,:,l)./r(i)^2 - 2/r(i)^2.*dvp(i,:,:,l);
         
-        Lap(i,:,:,l) = LaV(i,:,:,l) + 2/r(i)^2*dup(i,:,:,l) - V(i,:,:,l)/r(i)^2;
+        Lap(i,:,:,l) = LaV(i,:,:,l) + 2/r(i)^2.*dup(i,:,:,l) - V(i,:,:,l)./r(i)^2;
         
         Laz(i,:,:,l) = LaW(i,:,:,l);
         
     end
     
 end
-
+else
+    for i = 1:meshr
+        
+        Lar(i,:,:) = LaU(i,:,:) - U(i,:,:)./r(i)^2 - 2/r(i)^2.*dvp(i,:,:);
+        
+        Lap(i,:,:) = LaV(i,:,:) + 2/r(i)^2.*dup(i,:,:) - V(i,:,:)./r(i)^2;
+        
+        Laz(i,:,:) = LaW(i,:,:);
+        
+    end
+    
+    
+end
 end

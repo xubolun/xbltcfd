@@ -1,5 +1,7 @@
-function[]=outputdat(mesh1,mesh2,Xm,Ym,U)
-fname = '2dout.dat';
+function[]=outputdat(fnameh,mesh1,mesh2,Xm,Ym,U)
+%output a 2D field into .dat file 
+fname = sprintf('%s%s%s%s','results/',fnameh,'_2d','.dat');
+
 h1 = fopen(fname, 'w');
 
 fprintf(h1,'TITLE = "data from MATLAB" \n');

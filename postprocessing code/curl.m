@@ -1,23 +1,33 @@
 function[vtr,vtp,vtz]=curl(U,V,W,meshr,meshphi,meshz,r,r1,r2,id0,id1)
 % calculate the curl of vector (U,V,W) in parallel
-[gur,guphi,guz]=grad(U,r,r1,r2,meshr,meshphi,meshz,id0,id1);
 
-[gvr,gvphi,gvz]=grad(V,r,r1,r2,meshr,meshphi,meshz,id0,id1);
+[gur,guphi,guz,gvr,gvphi,gvz,gwr,gwphi,gwz]=vgrad(U,V,W,r,r1,r2,meshr,meshphi,meshz,id0,id1);
 
-[gwr,gwphi,gwz]=grad(W,r,r1,r2,meshr,meshphi,meshz,id0,id1);
+vtr = zeros(meshr,meshphi,meshz,id1-id0+1);
+vtp = zeros(meshr,meshphi,meshz,id1-id0+1);
+vtz = zeros(meshr,meshphi,meshz,id1-id0+1);
 
-parfor l = id0:id1 % r-/phi-/z- vorticity
+if id0~=id1
+for l = id0:id1 % r-/phi-/z- vorticity
     
-    vtr(:,:,:,l) = gwphi(:,:,:,l) - gvz(:,:,:,l);
+    vtr(:,:,:,l-id0+1) = gwphi(:,:,:,l-id0+1) - gvz(:,:,:,l-id0+1);
     
-    vtp(:,:,:,l) = guz(:,:,:,l) - gwr(:,:,:,l);   
-    
-    for i = 1:meshr 
+    vtp(:,:,:,l-id0+1) = guz(:,:,:,l-id0+1) - gwr(:,:,:,l-id0+1);   
+         
+    vtz(:,:,:,l-id0+1) = guphi(:,:,:,l-id0+1) - gvr(:,:,:,l-id0+1) ;
         
-        vtz(i,:,:,l) = 1/r(i)*V(i,:,:,l) + gvr(i,:,:,l) - guphi(i,:,:,l);
-        
-    end
-     
+    
+    
 end
-
+else
+    
+    vtr = gwphi - gvz;
+    
+    vtp = guz - gwr;   
+        
+    vtz = guphi - gvr;
+    
+    
+end
+clear g* ;
 end

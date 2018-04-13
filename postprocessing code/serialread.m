@@ -1,17 +1,18 @@
-function[datax0,datay0,dataz0,datau0,datav0,dataw0,datat0,time0,istep0] = serialread(fnameh,id0,id1)
+function[datau0,datav0,dataw0,datat0,time0] = serialread(fnameh,id0,id1,nel,np,otname)
 
 %read group of .fxxxx files by loop (from f%id0 ~ f%id1)
 
 time0 = [];
 istep0 = [];
-data0 = [];
 datax0 = [];
 datay0 = [];
 dataz0 = [];
-datau0 = [];
-datav0 = [];
-dataw0 = [];
-datat0 = [];
+len = id1-id0+1;
+
+datau0 = zeros(nel,np,len);
+datav0 = zeros(nel,np,len);
+dataw0 = zeros(nel,np,len);
+datat0 = zeros(nel,np,len);
 
 for i = id0:id1
     
@@ -30,37 +31,36 @@ for i = id0:id1
 end
 
 %read the first file to dump the geometrical data (make sure there are mesh data in this file)
-
-[time,istep,nel,N,data,datax,datay,dataz,datau,datav,dataw,datat] = readnek(fname(id0).name);
-
-datau0(:,:,id0) = datau(:,:);
-datav0(:,:,id0) = datav(:,:);
-dataw0(:,:,id0) = dataw(:,:);
-datat0(:,:,id0) = datat(:,:);
-time0(id0) = time;
-istep0(id0) = istep;
-
-for i = id0:id1
-    
-datax0(:,:,i) = datax(:,:);
-datay0(:,:,i) = datay(:,:);
-dataz0(:,:,i) = dataz(:,:);
-
-end
-
 tic; 
+if id0 == 1
 
-parfor i=(id0+1):id1
+    for i=id0:id1 % cannot use parfor here for function 'importdata' 
    
-    [time,istep,nel,N,data,datax,datay,dataz,datau,datav,dataw,datat] = readnek(fname(i).name);
+    [time,istep,nel,N,outnameu,outnamev,outnamew,outnamet] = readnek(fname(i).name,otname);
 
-    datau0(:,:,i) = datau(:,:);
-    datav0(:,:,i) = datav(:,:);
-    dataw0(:,:,i) = dataw(:,:);
-    datat0(:,:,i) = datat(:,:);
+    datau0(:,:,i) = importdata(outnameu);
+    datav0(:,:,i) = importdata(outnamev);
+    dataw0(:,:,i) = importdata(outnamew);
+    datat0(:,:,i) = importdata(outnamet);
     time0(i) = time;
     istep0(i) = istep;
   
-end
+    end
+else
+    for i=id0:id1 % cannot use parfor here for function 'importdata' and variable idex 'i-id0+1' 
+   
+    [time,istep,nel,N,outnameu,outnamev,outnamew,outnamet] = readnek(fname(i).name,otname);
+
+    datau0(:,:,i-id0+1) = importdata(outnameu);
+    datav0(:,:,i-id0+1) = importdata(outnamev);
+    dataw0(:,:,i-id0+1) = importdata(outnamew);
+    datat0(:,:,i-id0+1) = importdata(outnamet);
+    time0(i) = time;
+    istep0(i) = istep;
+    end
+   
+end 
+
+fprintf('serial reading completed....\n');
 toc;
 end
