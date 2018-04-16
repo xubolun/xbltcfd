@@ -42,13 +42,13 @@ end
 
 fnameh = char(who('dataa0'));
 
-fname1 = sprintf('%s%s','results/flow_',fnamh);
+fname1 = sprintf('%s%s','results/flow_',fnameh);
 save(fname1,'flow');
 
-fname2 = sprintf('%s%s','results/ord_',fnamh);
+fname2 = sprintf('%s%s','results/ord_',fnameh);
 save(fname2,'ord');
 
-fname3 = sprintf('%s%s','results/cylord_',fnamh);
-save(fnmae3,'r','phi','z');
+fname3 = sprintf('%s%s','results/cylord_',fnameh);
+save(fname3,'r','phi','z');
 
 end
